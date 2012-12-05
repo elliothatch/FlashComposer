@@ -17,7 +17,7 @@
 			// constructor code
 			soundChannel = new SoundChannel();
 			finalSound = new Sound();
-			soundBytes = CreateTone(8, 10, 0.5);
+			soundBytes = CreateTone(32, 10, 0.5);
 			OnPlay();
 		}
 		
@@ -34,7 +34,7 @@
 			var returnBytes:ByteArray = new ByteArray();
 			for ( var i:int = 0; i < length * 2400; i++ ) 
 			{
-				var value:Number = Math.sin(i / pitch) * amplitude;
+				var value:Number = Math.sin(i / pitch) * amplitude + Math.sin(i/(pitch*10/16)) * amplitude;
 				returnBytes.writeFloat(value);
 				returnBytes.writeFloat(value);
 			}
