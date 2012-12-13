@@ -40,11 +40,24 @@
 			for(var j = 0; j<29; j++)
 			{
 				var curKey = MAJOR;
-				if(j>=14)
+				var curKeyNote = 0;
+				if(j<8)
+					curKeyNote = 7;
+				else if(j<16)
+					curKeyNote = 14;
+				else if(j<20)
+				{
+					curKeyNote = 12;
 					curKey = MINOR;
-				notesString[3] += getKey(getWeightedKeyInterval(curKey)); //add random note in key of C
+				}
+				else
+				{
+					curKeyNote = 7;
+					curKey = MAJOR
+				}
+				notesString[3] += getKey(getWeightedKeyInterval(curKey)+curKeyNote); //add random melody note
 				if(j%4 == 0)
-					generateChord(0,curKey,1,3,6,tracks);
+					generateChord(curKeyNote,curKey,1,3,6,tracks);
 				/*if(j<8)
 					generateChord(7,MAJOR,4,3,6,tracks);
 				else if(j<16)
