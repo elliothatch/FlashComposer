@@ -32,6 +32,7 @@
 			notesString.push(new String());
 			notesString.push(new String());
 			var tracks:Array = new Array()
+			notesString[3] += "o6"
 			for(var i = 0; i<=2; i++)
 			{
 				tracks.push(i);
@@ -87,18 +88,18 @@
 			//keyIntervalProbability.push(new Array()); //major
 			var probSum = 0;
 			var majorProb:Array = new Array();
-			majorProb.push(7.0); //c
+			majorProb.push(10.0); //c
 			majorProb.push(1.0); //c+
-			majorProb.push(5.0); //d
+			majorProb.push(6.0); //d
 			majorProb.push(1.0); //d+
-			majorProb.push(6.0); //e
-			majorProb.push(5.0); //f
+			majorProb.push(9.0); //e
+			majorProb.push(6.0); //f
 			majorProb.push(1.0); //f+
-			majorProb.push(6.0); //g
+			majorProb.push(9.0); //g
 			majorProb.push(1.0); //g+
-			majorProb.push(5.0); //a
+			majorProb.push(6.0); //a
 			majorProb.push(1.0); //a+
-			majorProb.push(5.0); //b
+			majorProb.push(4.0); //b
 			for(var i = 0; i<11; i++)
 			{
 				probSum += majorProb[i];
@@ -111,18 +112,18 @@
 			
 			probSum = 0;
 			var minorProb:Array = new Array();
-			minorProb.push(7.0); //c
+			minorProb.push(10.0); //c
 			minorProb.push(1.0); //c+
-			minorProb.push(5.0); //d
-			minorProb.push(6.0); //d+
+			minorProb.push(6.0); //d
+			minorProb.push(9.0); //d+
 			minorProb.push(1.0); //e
-			minorProb.push(5.0); //f
+			minorProb.push(6.0); //f
 			minorProb.push(1.0); //f+
-			minorProb.push(6.0); //g
-			minorProb.push(5.0); //g+
+			minorProb.push(9.0); //g
+			minorProb.push(6.0); //g+
 			minorProb.push(1.0); //a
-			minorProb.push(4.0); //a+
-			minorProb.push(4.0); //b
+			minorProb.push(3.0); //a+
+			minorProb.push(5.0); //b
 			for(i = 0; i<11; i++)
 			{
 				probSum += minorProb[i];
