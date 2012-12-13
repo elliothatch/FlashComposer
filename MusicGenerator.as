@@ -4,6 +4,7 @@
 	import org.si.sion.*;
 	import org.si.sion.utils.SiONPresetVoice;
 	import flash.sampler.StackFrame;
+	import flashx.textLayout.formats.Float;
 	
 	public class MusicGenerator extends MovieClip {
 		
@@ -11,10 +12,13 @@
 		var voicePresets:SiONPresetVoice = new SiONPresetVoice();
 		var notesString:Array = new Array(); //String
 		var notesData:Array = new Array(); //SiONData //= soundDriver.compile("abc");
+		var initialKey:int = 0;
+		var initialKeyType:int = 0;
 		var currentKey:int = 0;
 		var currentKeyType:int = 0;
 		
 		var keys:Array = new Array();
+		var keyIntervalProbability:Array = new Array();
 		var MAJOR = 0;
 		var MINOR = 1;
 		var DIMINISHED = 2;
@@ -27,21 +31,28 @@
 			notesString.push(new String());
 			notesString.push(new String());
 			notesString.push(new String());
-			for(var j = 0; j<50; j++)
+			var tracks:Array = new Array()
+			for(var i = 0; i<=2; i++)
 			{
-				var tracks:Array = new Array()
-				for(var i = 0; i<=randomIntDistribution(0,4); i++)
-				{
-					tracks.push(i);
-				}
-				if(j<8)
+				tracks.push(i);
+			}
+			for(var j = 0; j<29; j++)
+			{
+				var curKey = MAJOR;
+				if(j>=14)
+					curKey = MINOR;
+				notesString[3] += getKey(getWeightedKeyInterval(curKey)); //add random note in key of C
+				if(j%4 == 0)
+					generateChord(0,curKey,1,3,6,tracks);
+				/*if(j<8)
 					generateChord(7,MAJOR,4,3,6,tracks);
 				else if(j<16)
-					generateChord(14,MAJOR,4,0,2,tracks);
-				//else if(j<20)
-					//generateChord(12,MINOR,4,0,2,tracks);
-				//else 
-					//generateChord(7,MAJOR,4,3,6,tracks);
+					generateChord(14,MAJOR,4,3,6,tracks);
+				else if(j<20)
+					generateChord(12,MINOR,4,3,5,tracks);
+				else 
+					generateChord(7,MAJOR,4,3,6,tracks);
+					*/
 			}
 			//notesString.push(generateAccompaniment());
 			for(i = 0; i< notesString.length; i++)
@@ -72,6 +83,55 @@
 			keys.push(new String("a"));
 			keys.push(new String("a+"));
 			keys.push(new String("b"));
+			
+			//keyIntervalProbability.push(new Array()); //major
+			var probSum = 0;
+			var majorProb:Array = new Array();
+			majorProb.push(7.0); //c
+			majorProb.push(1.0); //c+
+			majorProb.push(5.0); //d
+			majorProb.push(1.0); //d+
+			majorProb.push(6.0); //e
+			majorProb.push(5.0); //f
+			majorProb.push(1.0); //f+
+			majorProb.push(6.0); //g
+			majorProb.push(1.0); //g+
+			majorProb.push(5.0); //a
+			majorProb.push(1.0); //a+
+			majorProb.push(5.0); //b
+			for(var i = 0; i<11; i++)
+			{
+				probSum += majorProb[i];
+			}
+			for(i = 0; i<11; i++)
+			{
+				majorProb[i] /= probSum;
+			}
+			keyIntervalProbability.push(majorProb);
+			
+			probSum = 0;
+			var minorProb:Array = new Array();
+			minorProb.push(7.0); //c
+			minorProb.push(1.0); //c+
+			minorProb.push(5.0); //d
+			minorProb.push(6.0); //d+
+			minorProb.push(1.0); //e
+			minorProb.push(5.0); //f
+			minorProb.push(1.0); //f+
+			minorProb.push(6.0); //g
+			minorProb.push(5.0); //g+
+			minorProb.push(1.0); //a
+			minorProb.push(4.0); //a+
+			minorProb.push(4.0); //b
+			for(i = 0; i<11; i++)
+			{
+				probSum += minorProb[i];
+			}
+			for(i = 0; i<11; i++)
+			{
+				minorProb[i] /= probSum;
+			}
+			keyIntervalProbability.push(minorProb);
 		}
 		
 		function getKey(key:int):String
@@ -99,7 +159,8 @@
 			for(i = 0; i<notes.length; i++)
 			{
 				note = chordIntervals[notes[i]%chordIntervals.length];
-				notesString[tracks[i]] += "o"+(minOctave+Math.floor(notes[i]/chordIntervals.length)) + getKey(note);
+				notesString[tracks[i]] += "o"+(minOctave+Math.floor(notes[i]/chordIntervals.length)) + 
+					getKey(note) + duration.toString();
 			}
 		}
 		
@@ -107,6 +168,7 @@
 		{
 			var notes:String = new String();
 			notes = "l4 ";
+			
 			/*
 			for(var i = 0; i<keys.length; i++)
 			{
@@ -114,11 +176,6 @@
 				notes += "8";
 			}
 			*/
-			notes += getKey(0); //c
-			notes += getKey(4); //e
-			notes += getKey(7); //g
-			notes += "o6";
-			notes += getKey(12); //c
 			return notes;
 		}
 		
@@ -150,6 +207,22 @@
 				retArray[i] = (retArray[i] + key) % keys.length;
 			}
 			return retArray;
+		}
+		function getWeightedKeyInterval(keyType:int):int
+		{
+			var randomNum = Math.random();
+			var curTotal:Number = 0.0;
+			var retVal = 0;
+			for(var i = 0; i<11; i++)
+			{
+				if(keyIntervalProbability[keyType][i]+curTotal > randomNum)
+				{
+					retVal = i;
+					break;
+				}
+				curTotal += keyIntervalProbability[keyType][i];
+			}
+			return retVal;
 		}
 	}
 	
