@@ -56,6 +56,7 @@
 					curKey = MAJOR
 				}
 				notesString[3] += getKey(getWeightedKeyInterval(curKey)+curKeyNote); //add random melody note
+				notesString[3] += "4";
 				if(j%4 == 0)
 					generateChord(curKeyNote,curKey,1,3,6,tracks);
 				/*if(j<8)
@@ -238,6 +239,5 @@
 			}
 			return retVal;
 		}
-	}
-	
+	}	
 }
