@@ -88,7 +88,10 @@
 			soundDriver.play("l1 r");
 			for(i = 0; i< notesData.length; i++)
 			{
-				soundDriver.sequenceOn(notesData[i],null,0,0,1,i+1);
+				if(i<3)
+					soundDriver.sequenceOn(notesData[i],voicePresets["midi.organ1"],0,0,1,i+1);
+				else
+					soundDriver.sequenceOn(notesData[i],voicePresets["valsound.wind1"],0,0,1,i+1);
 			}
 			//soundDriver.sequenceOn(notes1,null,0,0,1,1);
 			//soundDriver.sequenceOn(notes2,null,0,0,1,2);
