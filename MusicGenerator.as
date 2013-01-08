@@ -5,6 +5,8 @@
 	import org.si.sion.utils.SiONPresetVoice;
 	import flash.sampler.StackFrame;
 	import flashx.textLayout.formats.Float;
+	import org.si.sound.patterns.Sequencer;
+	import org.si.sound.SoundObject;
 	
 	public class MusicGenerator extends MovieClip {
 		
@@ -32,33 +34,41 @@
 			notesString.push(new String());
 			notesString.push(new String());
 			var tracks:Array = new Array()
-			notesString[3] += "o6"
+			//notesString[3] += "o6"
 			for(var i = 0; i<=2; i++)
 			{
 				tracks.push(i);
 			}
+			currentKey = randomIntDistribution(0,11);
 			for(var j = 0; j<29; j++)
 			{
 				var curKey = MAJOR;
-				var curKeyNote = 0;
+				var curKeyNote = 0+currentKey;
 				if(j<8)
-					curKeyNote = 7;
+					curKeyNote = 7+currentKey;
 				else if(j<16)
-					curKeyNote = 14;
+					curKeyNote = 14+currentKey;
 				else if(j<20)
 				{
-					curKeyNote = 12;
+					curKeyNote = 12+currentKey;
 					curKey = MINOR;
 				}
 				else
 				{
-					curKeyNote = 7;
+					curKeyNote = 7+currentKey;
 					curKey = MAJOR
 				}
-				notesString[3] += getKey(getWeightedKeyInterval(curKey)+curKeyNote); //add random melody note
-				notesString[3] += "4";
+				//notesString[3] += getKey(getWeightedKeyInterval(curKey)+curKeyNote); //add random melody note
+				//notesString[3] += "4";
 				if(j%4 == 0)
+				{
 					generateChord(curKeyNote,curKey,1,3,6,tracks);
+				}
+				if(j%4 == 0)
+				{
+					var melodyLine:NotePhrase = generateMelodyPhrase(curKeyNote,curKey,4,1,6,6,5);
+					notesString[3] += melodyLine.getNotes();
+				}
 				/*if(j<8)
 					generateChord(7,MAJOR,4,3,6,tracks);
 				else if(j<16)
@@ -238,6 +248,58 @@
 				curTotal += keyIntervalProbability[keyType][i];
 			}
 			return retVal;
+		}
+		
+		function generateMelodyPhrase(key:int, keyType:int, measureLength:int, measureCount:int,
+									  minOctave:int, maxOctave:int, speed:int):NotePhrase
+		{
+			//speed defines how energetic the phrase is
+			var melodyNotes:String = "";
+			var melodyRhythms:Array = new Array();
+			//iterate through measures, create rhythms
+			for(var i = 0; i<measureCount; i++)
+			{
+				recursiveSplitBeat(melodyRhythms, measureLength/4);//assuming 4/4 time signature
+			}
+			for(i = 0; i<melodyRhythms.length; i++)
+			{
+				melodyNotes += "o";
+				melodyNotes += minOctave.toString();
+				melodyNotes += getKey(getWeightedKeyInterval(keyType)+key); //add random melody note
+				melodyNotes += melodyRhythms[i].toString();
+			}
+			var melodyPhrase:NotePhrase = new NotePhrase(melodyNotes);
+			return melodyPhrase;
+		}
+		function recursiveSplitBeat(beats:Array, beatLength:int):void
+		{
+			if(Math.random() < 0.75 - beatLength*0.1)//split
+			{
+				var dupleProbability = 0.8;
+				if(beatLength % 3 == 0) //if divisible by three - increase probability of 3s
+				{
+					dupleProbability = 0.5;
+				}
+				else
+				{
+					dupleProbability = 0.95;
+				}
+				if(Math.random() < dupleProbability)
+				{
+					recursiveSplitBeat(beats,beatLength*2);
+					recursiveSplitBeat(beats,beatLength*2);
+				}
+				else
+				{
+					recursiveSplitBeat(beats,beatLength*3);
+					recursiveSplitBeat(beats,beatLength*3);
+					recursiveSplitBeat(beats,beatLength*3);
+				}
+			}
+			else //end the branch
+			{
+				beats.push(beatLength);
+			}
 		}
 	}	
 }
