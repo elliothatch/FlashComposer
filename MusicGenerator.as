@@ -10,8 +10,8 @@
 	
 	public class MusicGenerator extends MovieClip {
 		
-		public var soundDriver:SiONDriver = new SiONDriver();
-		var voicePresets:SiONPresetVoice = new SiONPresetVoice();
+		static public var soundDriver:SiONDriver = new SiONDriver();
+		static var voicePresets:SiONPresetVoice = new SiONPresetVoice();
 		var notesString:Array = new Array(); //String
 		var notesData:Array = new Array(); //SiONData //= soundDriver.compile("abc");
 		var initialKey:int = 0;
@@ -44,6 +44,7 @@
 			{
 				var curKey = MAJOR;
 				var curKeyNote = 0+currentKey;
+				
 				if(j<8)
 					curKeyNote = 7+currentKey;
 				else if(j<16)
@@ -58,6 +59,7 @@
 					curKeyNote = 7+currentKey;
 					curKey = MAJOR
 				}
+				
 				//notesString[3] += getKey(getWeightedKeyInterval(curKey)+curKeyNote); //add random melody note
 				//notesString[3] += "4";
 				if(j%4 == 0)
@@ -116,16 +118,16 @@
 			var probSum = 0;
 			var majorProb:Array = new Array();
 			majorProb.push(10.0); //c
-			majorProb.push(1.0); //c+
+			majorProb.push(0.0); //c+
 			majorProb.push(6.0); //d
-			majorProb.push(1.0); //d+
+			majorProb.push(0.0); //d+
 			majorProb.push(9.0); //e
 			majorProb.push(6.0); //f
-			majorProb.push(1.0); //f+
+			majorProb.push(0.0); //f+
 			majorProb.push(9.0); //g
-			majorProb.push(1.0); //g+
+			majorProb.push(0.0); //g+
 			majorProb.push(6.0); //a
-			majorProb.push(1.0); //a+
+			majorProb.push(0.0); //a+
 			majorProb.push(4.0); //b
 			for(var i = 0; i<11; i++)
 			{
@@ -140,16 +142,16 @@
 			probSum = 0;
 			var minorProb:Array = new Array();
 			minorProb.push(10.0); //c
-			minorProb.push(1.0); //c+
+			minorProb.push(0.0); //c+
 			minorProb.push(6.0); //d
 			minorProb.push(9.0); //d+
-			minorProb.push(1.0); //e
+			minorProb.push(0.0); //e
 			minorProb.push(6.0); //f
-			minorProb.push(1.0); //f+
+			minorProb.push(0.0); //f+
 			minorProb.push(9.0); //g
 			minorProb.push(6.0); //g+
-			minorProb.push(1.0); //a
-			minorProb.push(3.0); //a+
+			minorProb.push(0.0); //a
+			minorProb.push(6.0); //a+
 			minorProb.push(5.0); //b
 			for(i = 0; i<11; i++)
 			{
